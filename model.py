@@ -47,15 +47,12 @@ class Net(nn.Module):
         self.num_classes = args.num_classes
         self.pooling_ratio = args.pooling_ratio
         self.dropout_ratio = args.dropout_ratio
-        self.num_atoms = args.num_atoms # Number of atoms in the dictionary
+        self.num_atoms = args.num_atoms 
         self.ratio = ceil(int(self.mean_num_nodes * self.pooling_ratio))
 
-        # Instantiate the dictionary module
-        self.num_atoms = args.num_atoms  # Number of atoms in the dictionary
-        # self.dictionary_module = DictionaryModule(self.num_atoms, self.num_features)
         self.dictionary_module = DictionaryModule(self.num_atoms, self.nhid)
 
-        # Replace node_encoder with NodeEncoder
+  
         self.node_encoder = NodeEncoder(self.num_features, self.nhid, num_layers=2)
         self.gconv1 = Graph_convolution(self.kernels, self.nhid, self.nhid, self.dictionary_module)
         self.gconv2 = Graph_convolution(self.kernels, self.nhid, self.nhid, self.dictionary_module)
@@ -83,36 +80,36 @@ class Net(nn.Module):
         x = self.node_encoder(x, edge_index)
         x = F.dropout(x, p=self.dropout_ratio, training=self.training)
 
-        # Compute dictionary coefficients using encoded features
+       
         coefficients = self.dictionary_module(x)  # x has shape (N, nhid)
 
-        # Assign nodes to subgraphs based on the highest coefficient
+        
         subgraph_assignments = torch.argmax(coefficients, dim=1)  # [N], values from 0 to num_atoms - 1
 
-        # Create a mask for edges within the same subgraph
+        
         src, dst = edge_index
         src_subgraph = subgraph_assignments[src]
         dst_subgraph = subgraph_assignments[dst]
         subgraph_mask = (src_subgraph == dst_subgraph)
 
-        # Filter edge_index to include only intra-subgraph edges
+        
         edge_index_subgraph = edge_index[:, subgraph_mask]
 
-        # Proceed with the rest of the network using the subgraph edge_index
+        
         x1 = self.gconv1(x, edge_index_subgraph)
         x1 = F.dropout(x1, p=self.dropout_ratio, training=self.training)
         x2 = self.gconv2(x1, edge_index_subgraph)
         x2 = F.dropout(x2, p=self.dropout_ratio, training=self.training)
         x3 = self.gconv3(x2, edge_index_subgraph)
 
-        # Compute layer-wise weights using GLAPool
+        
         weight = torch.cat((self.weight(x1, edge_index_subgraph, None, batch, 1),
                             self.weight(x2, edge_index_subgraph, None, batch, 1),
                             self.weight(x3, edge_index_subgraph, None, batch, 1)), dim=-1)
         weight = F.softmax(weight, dim=-1)
         x = weight[:, 0].unsqueeze(-1) * x1 + weight[:, 1].unsqueeze(-1) * x2 + weight[:, 2].unsqueeze(-1) * x3
 
-        # Proceed with pooling and classification
+        
         x = self.pool_att(x, edge_index_subgraph, batch)
         graph_feature = x
         x = self.classifier(x)
