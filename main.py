@@ -18,10 +18,10 @@ simplefilter(action='ignore', category=FutureWarning)
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default='SDGCN', help='Model benchmark, GCN, GAT, GIN, SDGCN')
+parser.add_argument('--model', type=str, default='GCN', help='Model benchmark, GCN, GAT, GIN, SDGCN (ours)')
 parser.add_argument('--alpha', type=int, default=0.5, help='alpha')
 parser.add_argument('--batch_size', type=int, default=64, help='batch size')
-parser.add_argument('--dataname', type=str, default='github_stargazers', help='DD/PROTEINS/NCI1/NCI109/Mutagenicity') # PROTEINS, COLLAB, DD, NCI1, NCI109, Mutagenicity
+parser.add_argument('--dataname', type=str, default='PROTEINS', help='DD/PROTEINS/NCI1/NCI109/Mutagenicity') # PROTEINS, COLLAB, DD, NCI1, NCI109, Mutagenicity
 parser.add_argument('--dataset_path', type=str, default='../pyg_data', help='path to save result')
 parser.add_argument('--dropout_ratio', type=float, default=0.1, help='dropout ratio')
 parser.add_argument('--epochs', type=int, default=100, help='maximum number of epochs')
@@ -96,6 +96,7 @@ if __name__ == "__main__":
     print('Number of classes: {}'.format(args.num_classes))
     print('Number of features: {}'.format(args.num_features))
     print("Name of the dataset: {}".format(args.dataname))
+    print("Running for model: {}".format(args.model))
 
     # data_path
     if not os.path.isdir(args.dataset_path):

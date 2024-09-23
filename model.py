@@ -64,8 +64,9 @@ class GCNNet(nn.Module):
             x = F.dropout(x, p=self.dropout_ratio, training=self.training)
 
         x = global_mean_pool(x, batch)
+        graph_feature = x
         x = self.classifier(x)
-        return x
+        return x, graph_feature
 
 # --------------------- GATNet Class --------------------- #
 
@@ -101,8 +102,9 @@ class GATNet(nn.Module):
             x = F.dropout(x, p=self.dropout_ratio, training=self.training)
 
         x = global_mean_pool(x, batch)
+        graph_feature = x
         x = self.classifier(x)
-        return x
+        return x, graph_feature
 
 # --------------------- GINNet Class --------------------- #
 
@@ -139,8 +141,9 @@ class GINNet(nn.Module):
             x = F.dropout(x, p=self.dropout_ratio, training=self.training)
 
         x = global_mean_pool(x, batch)
+        graph_feature = x
         x = self.classifier(x)
-        return x
+        return x, graph_feature
 
 
 

@@ -74,7 +74,7 @@ def cross_validation(dataset, model, args):
         print('For fold {}, test acc: {:.6f}, test auc: {:.6f}, best epoch: {}'.format(
             fold+1, fold_test_acc, fold_test_auc, best_epoch))
 
-        with open(os.path.join(args.results, '{}.txt'.format(args.experiment_number)), 'a') as f:
+        with open(os.path.join(args.results, '{}_{}.txt'.format(args.experiment_number,args.model)), 'a') as f:
             f.write("fold {}: train acc: {:.4f}, valid acc: {:.4f}, test acc: {:.4f}, "
                     "train loss: {:.6f}, valid loss: {:.6f}, test loss: {:.6f}, "
                     "valid auc: {:.6f}, test auc: {:.6f}, best epoch: {}".format(
@@ -91,7 +91,7 @@ def cross_validation(dataset, model, args):
     overtime = time.strftime('%Y-%b-%d-%H:%M:%S', time.gmtime())
     print('Test Accuracy: {:.6f} ± {:.6f}, Test AUC: {:.6f} ± {:.6f}, Duration: {:.6f}'.format(
         acc_mean, acc_std, auc_mean, auc_std, duration_mean))
-    with open(os.path.join(args.results, '{}.txt'.format(args.experiment_number)), 'a') as f:
+    with open(os.path.join(args.results, '{}_{}.txt'.format(args.experiment_number,args.model)), 'a') as f:
         f.write('Test Accuracy: {:.4f} ± {:.4f}, Test AUC: {:.4f} ± {:.4f}, Duration: {:.6f}'.format(
             acc_mean * 100, acc_std * 100, auc_mean, auc_std, duration_mean))
         f.write('\r\n')
@@ -131,8 +131,13 @@ def train(model, optimizer, loader, device):
     for data in loader:
         data = data.to(device)
         out, cl = model(data)
-        orthogonal_loss = model.dictionary_module.orthogonality_loss() * 0.2
-        loss = F.nll_loss(out, data.y.view(-1)) + orthogonal_loss
+
+        loss = F.nll_loss(out, data.y.view(-1))
+
+        if hasattr(model, 'dictionary_module'):
+            orthogonal_loss = model.dictionary_module.orthogonality_loss() * 0.2
+            loss += orthogonal_loss
+
         pred = out.argmax(dim=1)
         train_loss += loss.item() * num_graphs(data)
         train_correct += pred.eq(data.y.view(-1)).sum().item()
@@ -154,8 +159,8 @@ def val_test(model, loader, device):
         out, cl = model(data)
         probs = out.exp() 
         pred = out.argmax(dim=1)
-        orthogonal_loss = model.dictionary_module.orthogonality_loss() * 0.2
-        loss += F.nll_loss(out, data.y, reduction='sum').item() + orthogonal_loss.item()
+        # orthogonal_loss = model.dictionary_module.orthogonality_loss() * 0.2
+        loss += F.nll_loss(out, data.y, reduction='sum').item() #+ orthogonal_loss.item()
         correct += pred.eq(data.y.view(-1)).sum().item()
         y_true.append(data.y.view(-1).cpu())
         y_score.append(probs.cpu())
