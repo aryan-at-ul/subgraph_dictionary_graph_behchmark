@@ -9,7 +9,7 @@ from torch_geometric.utils import degree
 import torch_geometric.transforms as T
 from train_eval import cross_validation
 # from atom4 import GraphMultiComponentClassifier
-from model import Net 
+from model import Net, GATNet, GINNet, GCNNet
 
 torch.autograd.set_detect_anomaly(True)
 from warnings import simplefilter
@@ -18,9 +18,10 @@ simplefilter(action='ignore', category=FutureWarning)
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument('--model', type=str, default='SDGCN', help='Model benchmark, GCN, GAT, GIN, SDGCN')
 parser.add_argument('--alpha', type=int, default=0.5, help='alpha')
 parser.add_argument('--batch_size', type=int, default=64, help='batch size')
-parser.add_argument('--dataname', type=str, default='NCI109', help='DD/PROTEINS/NCI1/NCI109/Mutagenicity') # PROTEINS, COLLAB, DD, NCI1, NCI109, Mutagenicity
+parser.add_argument('--dataname', type=str, default='github_stargazers', help='DD/PROTEINS/NCI1/NCI109/Mutagenicity') # PROTEINS, COLLAB, DD, NCI1, NCI109, Mutagenicity
 parser.add_argument('--dataset_path', type=str, default='../pyg_data', help='path to save result')
 parser.add_argument('--dropout_ratio', type=float, default=0.1, help='dropout ratio')
 parser.add_argument('--epochs', type=int, default=100, help='maximum number of epochs')
@@ -106,10 +107,18 @@ if __name__ == "__main__":
         os.makedirs(args.results)
 
     setseed(args.seed)
-    model = Net(args).to(args.device)
 
+    if args.model == 'SDGCN':
+        model = Net(args).to(args.device)
+    elif args.model == 'GCN':
+        model = GCNNet(args).to(args.device)
+    elif args.model == 'GAT':
+        model = GATNet(args).to(args.device)
+    elif args.model == 'GIN':
+        model = GINNet(args).to(args.device)
+    else:
+        raise ValueError('Model not found') 
 
-    
     print(f"Total trainable parameters: {count_parameters(model)}, here ????")
 
     acc, std, duration_mean, overtime = cross_validation(

@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import GCNConv
 from torch_geometric.utils import to_dense_batch, remove_self_loops
 from torch_geometric.nn.pool.topk_pool import topk, filter_adj
 from math import ceil
@@ -10,8 +9,9 @@ from torch_geometric.nn import MessagePassing
 from torch.nn import Linear as Lin
 from torch_geometric.data import Data
 from layers import DictionaryModule, Graph_convolution, GraphPooling, Topk_pool, NodeEncoder
+from torch_geometric.nn import GCNConv, GATConv, GINConv, global_mean_pool
 
-# --------------------- Updated Net Class --------------------- #
+# --------------------- Classifier Head --------------------- #
 
 
 class Classifier(nn.Module):
@@ -31,6 +31,116 @@ class Classifier(nn.Module):
         x = F.log_softmax(self.lin2(x), dim=-1)
         return x
 
+# --------------------- GCNNet Class --------------------- #
+
+class GCNNet(nn.Module):
+    def __init__(self, args):
+        super(GCNNet, self).__init__()
+        self.args = args
+        self.num_features = args.num_features
+        self.nhid = args.nhid
+        self.num_classes = args.num_classes
+        self.dropout_ratio = args.dropout_ratio
+        self.num_layers = 4  # Default number of layers
+
+        self.convs = nn.ModuleList()
+        self.convs.append(GCNConv(self.num_features, self.nhid))
+        for _ in range(self.num_layers - 1):
+            self.convs.append(GCNConv(self.nhid, self.nhid))
+
+        self.classifier = Classifier(self.nhid, self.dropout_ratio, self.num_classes)
+
+    def reset_parameters(self):
+        for conv in self.convs:
+            conv.reset_parameters()
+        self.classifier.reset_parameters()
+
+    def forward(self, data):
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+
+        for conv in self.convs:
+            x = conv(x, edge_index)
+            x = F.relu(x)
+            x = F.dropout(x, p=self.dropout_ratio, training=self.training)
+
+        x = global_mean_pool(x, batch)
+        x = self.classifier(x)
+        return x
+
+# --------------------- GATNet Class --------------------- #
+
+class GATNet(nn.Module):
+    def __init__(self, args):
+        super(GATNet, self).__init__()
+        self.args = args
+        self.num_features = args.num_features
+        self.nhid = args.nhid
+        self.num_classes = args.num_classes
+        self.dropout_ratio = args.dropout_ratio
+        self.num_layers = 4  
+        self.num_heads = args.num_heads
+
+        self.convs = nn.ModuleList()
+        self.convs.append(GATConv(self.num_features, self.nhid // self.num_heads, heads=self.num_heads, dropout=self.dropout_ratio))
+        for _ in range(self.num_layers - 1):
+            self.convs.append(GATConv(self.nhid, self.nhid // self.num_heads, heads=self.num_heads, dropout=self.dropout_ratio))
+
+        self.classifier = Classifier(self.nhid, self.dropout_ratio, self.num_classes)
+
+    def reset_parameters(self):
+        for conv in self.convs:
+            conv.reset_parameters()
+        self.classifier.reset_parameters()
+
+    def forward(self, data):
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+
+        for conv in self.convs:
+            x = conv(x, edge_index)
+            x = F.elu(x)
+            x = F.dropout(x, p=self.dropout_ratio, training=self.training)
+
+        x = global_mean_pool(x, batch)
+        x = self.classifier(x)
+        return x
+
+# --------------------- GINNet Class --------------------- #
+
+class GINNet(nn.Module):
+    def __init__(self, args):
+        super(GINNet, self).__init__()
+        self.args = args
+        self.num_features = args.num_features
+        self.nhid = args.nhid
+        self.num_classes = args.num_classes
+        self.dropout_ratio = args.dropout_ratio
+        self.num_layers = 4
+
+        self.convs = nn.ModuleList()
+        nn1 = nn.Sequential(nn.Linear(self.num_features, self.nhid), nn.ReLU(), nn.Linear(self.nhid, self.nhid))
+        self.convs.append(GINConv(nn1))
+        for _ in range(self.num_layers - 1):
+            nnk = nn.Sequential(nn.Linear(self.nhid, self.nhid), nn.ReLU(), nn.Linear(self.nhid, self.nhid))
+            self.convs.append(GINConv(nnk))
+
+        self.classifier = Classifier(self.nhid, self.dropout_ratio, self.num_classes)
+
+    def reset_parameters(self):
+        for conv in self.convs:
+            conv.reset_parameters()
+        self.classifier.reset_parameters()
+
+    def forward(self, data):
+        x, edge_index, batch = data.x, data.edge_index, data.batch
+
+        for conv in self.convs:
+            x = conv(x, edge_index)
+            x = F.relu(x)
+            x = F.dropout(x, p=self.dropout_ratio, training=self.training)
+
+        x = global_mean_pool(x, batch)
+        x = self.classifier(x)
+        return x
 
 
 
