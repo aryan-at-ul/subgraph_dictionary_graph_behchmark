@@ -1,0 +1,7 @@
+fold 1: train acc: 75.2063, valid acc: 62.7898, test acc: 62.0039, train loss: 2.463158, valid loss: 0.881833, test loss: 0.893832, valid auc: 0.684492, test auc: 0.671791, best epoch: 57
+fold 2: train acc: 73.3071, valid acc: 63.6542, test acc: 76.7387, train loss: 0.533138, valid loss: 0.710515, test loss: 0.426755, valid auc: 0.680797, test auc: 0.881229, best epoch: 1
+fold 3: train acc: 73.6346, valid acc: 68.8016, test acc: 82.5933, train loss: 0.518561, valid loss: 0.556817, test loss: 0.379419, valid auc: 0.777831, test auc: 0.929006, best epoch: 1
+fold 4: train acc: 75.5206, valid acc: 71.9057, test acc: 84.4008, train loss: 0.500280, valid loss: 0.524086, test loss: 0.353337, valid auc: 0.815422, test auc: 0.936297, best epoch: 1
+fold 5: train acc: 77.9699, valid acc: 73.7525, test acc: 85.7367, train loss: 0.465458, valid loss: 0.502520, test loss: 0.312806, valid auc: 0.835991, test auc: 0.945287, best epoch: 1
+Test Accuracy: 78.2947 ± 9.7334, Test AUC: 0.8727 ± 0.1150, Duration: 5022.211914
+
