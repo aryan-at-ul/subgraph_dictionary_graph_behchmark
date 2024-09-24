@@ -4,4 +4,3 @@ fold 3: train acc: 78.8772, valid acc: 77.6029, test acc: 77.2121, train loss: 0
 fold 4: train acc: 79.2491, valid acc: 76.4848, test acc: 81.0909, train loss: 0.430291, valid loss: 0.497685, test loss: 0.402863, valid auc: 0.844525, test auc: 0.898086, best epoch: 9
 fold 5: train acc: 79.4913, valid acc: 78.6667, test acc: 83.3939, train loss: 0.441666, valid loss: 0.458552, test loss: 0.334146, valid auc: 0.873019, test auc: 0.936689, best epoch: 1
 Test Accuracy: 78.1941 ± 4.0941, Test AUC: 0.8666 ± 0.0520, Duration: 317.875641
-
