@@ -18,7 +18,7 @@ simplefilter(action='ignore', category=FutureWarning)
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default='GCN', help='Model benchmark, GCN, GAT, GIN, SDGCN (ours)')
+parser.add_argument('--model', type=str, default='SDGCN', help='Model benchmark, GCN, GAT, GIN, SDGCN (ours)')
 parser.add_argument('--alpha', type=int, default=0.5, help='alpha')
 parser.add_argument('--batch_size', type=int, default=64, help='batch size')
 parser.add_argument('--dataname', type=str, default='PROTEINS', help='DD/PROTEINS/NCI1/NCI109/Mutagenicity') # PROTEINS, COLLAB, DD, NCI1, NCI109, Mutagenicity

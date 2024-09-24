@@ -1,7 +1,7 @@
-fold 1: train acc: 54.5556, valid acc: 50.3333, test acc: 49.6667, train loss: 0.924597, valid loss: 0.929207, test loss: 0.964446, valid auc: 0.711550, test auc: 0.691450, best epoch: 25
-fold 2: train acc: 56.3333, valid acc: 50.6667, test acc: 60.3333, train loss: 0.869520, valid loss: 0.959635, test loss: 0.852156, valid auc: 0.694400, test auc: 0.781592, best epoch: 2
-fold 3: train acc: 56.6667, valid acc: 53.0000, test acc: 60.3333, train loss: 0.857476, valid loss: 0.960016, test loss: 0.797292, valid auc: 0.714725, test auc: 0.805225, best epoch: 2
-fold 4: train acc: 59.0000, valid acc: 57.0000, test acc: 60.3333, train loss: 0.826416, valid loss: 0.904300, test loss: 0.831248, valid auc: 0.750633, test auc: 0.775958, best epoch: 3
-fold 5: train acc: 58.8889, valid acc: 54.3333, test acc: 65.6667, train loss: 0.814991, valid loss: 0.905990, test loss: 0.750856, valid auc: 0.734192, test auc: 0.830617, best epoch: 2
-Test Accuracy: 59.2667 ± 5.8424, Test AUC: 0.7770 ± 0.0525, Duration: 23.511282
+fold 1: train acc: 61.6667, valid acc: 50.6667, test acc: 46.0000, train loss: 357.320946, valid loss: 7.062471, test loss: 7.048291, valid auc: 0.688942, test auc: 0.672508, best epoch: 100
+fold 2: train acc: 60.7778, valid acc: 47.6667, test acc: 53.6667, train loss: 29.819805, valid loss: 1.679632, test loss: 1.527726, valid auc: 0.703158, test auc: 0.727425, best epoch: 100
+fold 3: train acc: 59.0000, valid acc: 53.0000, test acc: 53.3333, train loss: 2.407980, valid loss: 1.117423, test loss: 0.976793, valid auc: 0.691217, test auc: 0.730467, best epoch: 78
+fold 4: train acc: 59.6667, valid acc: 53.0000, test acc: 61.3333, train loss: 1.631157, valid loss: 0.951434, test loss: 0.837850, valid auc: 0.731675, test auc: 0.783633, best epoch: 1
+fold 5: train acc: 59.1111, valid acc: 55.6667, test acc: 64.3333, train loss: 0.793003, valid loss: 0.931857, test loss: 0.764297, valid auc: 0.734183, test auc: 0.825725, best epoch: 6
+Test Accuracy: 55.7333 ± 7.2472, Test AUC: 0.7480 ± 0.0586, Duration: 107.839745
 
