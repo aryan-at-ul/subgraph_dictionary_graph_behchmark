@@ -1,0 +1,2 @@
+fold 1: train acc: 76.0667, valid acc: 74.6000, test acc: 75.3000, train loss: 0.501527, valid loss: 0.558562, test loss: 0.559463, valid auc: 0.892108, test auc: 0.893526, best epoch: 15
+fold 2: train acc: 82.6000, valid acc: 78.2000, test acc: 78.8000, train loss: 0.382251, valid loss: 0.529683, test loss: 0.487615, valid auc: 0.913685, test auc: 0.923303, best epoch: 84
