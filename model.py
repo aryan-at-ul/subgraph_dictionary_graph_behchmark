@@ -166,7 +166,7 @@ class Net(nn.Module):
         self.dictionary_module = DictionaryModule(self.num_atoms, self.nhid)
 
   
-        self.node_encoder = NodeEncoder(self.num_features, self.nhid, num_layers=2)
+        self.node_encoder = NodeEncoder(self.num_features, self.nhid, num_layers=4)
         self.gconv1 = Graph_convolution(self.kernels, self.nhid, self.nhid, self.dictionary_module)
         self.gconv2 = Graph_convolution(self.kernels, self.nhid, self.nhid, self.dictionary_module)
         self.gconv3 = Graph_convolution(self.kernels, self.nhid, self.nhid, self.dictionary_module)

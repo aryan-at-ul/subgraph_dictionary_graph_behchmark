@@ -135,7 +135,7 @@ def train(model, optimizer, loader, device):
         loss = F.nll_loss(out, data.y.view(-1))
 
         if hasattr(model, 'dictionary_module'):
-            orthogonal_loss = model.dictionary_module.orthogonality_loss() * 0.2
+            orthogonal_loss = model.dictionary_module.orthogonality_loss() * 0.1
             loss += orthogonal_loss
 
         pred = out.argmax(dim=1)
