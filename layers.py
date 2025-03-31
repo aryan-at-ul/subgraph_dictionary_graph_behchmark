@@ -3,12 +3,51 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch_geometric.nn import GCNConv
 from torch_geometric.utils import to_dense_batch, remove_self_loops
-from torch_geometric.nn.pool.topk_pool import topk, filter_adj
+# from torch_geometric.nn.pool.topk_pool import topk, filter_adj
 from math import ceil
 import math
 from torch_geometric.nn import MessagePassing
 from torch.nn import Linear as Lin
 from torch_geometric.data import Data
+
+def topk(x, ratio, batch):
+    num_nodes = x.size(0)
+    batch_size = int(batch.max()) + 1
+    perm = []
+    for i in range(batch_size):
+        mask = (batch == i)
+        x_i = x[mask]
+        num_nodes_i = x_i.size(0)
+        k = max(int(ratio * num_nodes_i), 1)
+        if k >= num_nodes_i:
+            perm_i = torch.nonzero(mask).view(-1)
+        else:
+            x_i_score = x_i.view(-1)
+            _, idx = torch.topk(x_i_score, k, largest=True)
+            perm_i = torch.nonzero(mask).view(-1)[idx]
+        perm.append(perm_i)
+    perm = torch.cat(perm, dim=0)
+    return perm
+from torch_geometric.utils import subgraph
+
+def filter_adj(edge_index, edge_attr, perm, num_nodes=None):
+    # Subgraph function will return the filtered edge_index and edge_attr
+    edge_index, edge_attr = subgraph(
+        subset=perm,
+        edge_index=edge_index,
+        edge_attr=edge_attr,
+        num_nodes=num_nodes,
+        relabel_nodes=True
+    )
+    return edge_index, edge_attr
+
+
+
+
+
+
+
+
 
 # --------------------- Dictionary Module --------------------- #
 

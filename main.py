@@ -40,9 +40,9 @@ parser.add_argument('--weight_decay', type=float, default=0.0001, help='weight d
 
 
 args = parser.parse_args()
-args.device =  torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+# args.device =  torch.device("cuda") if torch.backends.mps.is_available() else torch.device("cpu")
 
-args.device = 'cpu'
+args.device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def setseed(seed):
     random.seed(seed)
