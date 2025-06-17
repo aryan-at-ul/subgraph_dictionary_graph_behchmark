@@ -1,0 +1,32 @@
+{
+    "model": "h2gcn",
+    "dataset": "organsmnist",
+    "test_acc": 0.723688682451569,
+    "test_f1": 0.6566193005236666,
+    "test_auc": 0.9627317433167953,
+    "best_val_acc": 0.8372756933115824,
+    "args": {
+        "data_dir": "./data",
+        "data_flag": "organsmnist",
+        "batch_size": 16,
+        "num_workers": 4,
+        "model": "h2gcn",
+        "num_features": 384,
+        "nhid": 256,
+        "dropout_ratio": 0.5,
+        "gfk_K": 5,
+        "h2gcn_layers": 3,
+        "epochs": 10,
+        "lr": 0.001,
+        "weight_decay": 0.0005,
+        "seed": 42,
+        "device": "cuda",
+        "alpha": 0.5,
+        "kernels": 3,
+        "num_heads": 4,
+        "mean_num_nodes": 196,
+        "pooling_ratio": 0.5,
+        "num_atoms": 4,
+        "num_classes": 11
+    }
+}

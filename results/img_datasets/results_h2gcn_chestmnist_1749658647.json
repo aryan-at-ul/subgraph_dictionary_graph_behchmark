@@ -1,0 +1,32 @@
+{
+    "model": "h2gcn",
+    "dataset": "chestmnist",
+    "test_acc": 0.5317166674096198,
+    "test_f1": 0.0,
+    "test_auc": 0.6623206212611301,
+    "best_val_acc": 0.5418486496122649,
+    "args": {
+        "data_dir": "./data",
+        "data_flag": "chestmnist",
+        "batch_size": 16,
+        "num_workers": 4,
+        "model": "h2gcn",
+        "num_features": 384,
+        "nhid": 256,
+        "dropout_ratio": 0.5,
+        "gfk_K": 5,
+        "h2gcn_layers": 3,
+        "epochs": 10,
+        "lr": 0.001,
+        "weight_decay": 0.0005,
+        "seed": 42,
+        "device": "cuda",
+        "alpha": 0.5,
+        "kernels": 3,
+        "num_heads": 4,
+        "mean_num_nodes": 196,
+        "pooling_ratio": 0.5,
+        "num_atoms": 4,
+        "num_classes": 14
+    }
+}
